@@ -10,6 +10,7 @@ const {crud} = require('./services/mysql.service')
 
 const AuthRouterClass = require('./routes/auth.router');
 const UtilisateurRouter = require('./routes/utilisateur.router')
+const CagnotteRouter = require('./routes/cagnotte.router')
 
 /* Server classe */
 
@@ -85,14 +86,16 @@ class ServerClass {
 
     // Method to define serveur routes
     bindRoutes(){
-        
+
         // Init router classe
         const authRouter = new AuthRouterClass( this.crud );
         const utilisateurRouter = new UtilisateurRouter( this.crud );
+        const cagnotteRouter = new CagnotteRouter( this.crud );
 
         // Add router in server app
         this.app.use( '/api/auth', authRouter.init() );
         this.app.use( '/api/utilisateur', utilisateurRouter.init() );
+        this.app.use( '/api/cagnotte', cagnotteRouter.init() );
         
         this.launch();
     };
