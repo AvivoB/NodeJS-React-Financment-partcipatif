@@ -1,47 +1,25 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.0
+-- https://www.phpmyadmin.net/
 --
--- Structure de la table `cagnotte`
---
+-- Hôte : 127.0.0.1
+-- Généré le : mar. 12 mars 2024 à 18:02
+-- Version du serveur : 10.4.27-MariaDB
+-- Version de PHP : 8.1.12
 
-CREATE TABLE `cagnotte` (
-  `ID` int(11) NOT NULL,
-  `NOM` varchar(255) NOT NULL,
-  `DESCRIPTION` varchar(255) DEFAULT NULL,
-  `OBJECTIF` int(11) NOT NULL,
-  `ETAT` varchar(255) NOT NULL,
-  `IMAGE_URL` varchar(255) DEFAULT NULL,
-  `DATEDEBUT` date DEFAULT NULL,
-  `DATEFIN` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
--- --------------------------------------------------------
 
---
--- Structure de la table `commentaire`
---
-
-CREATE TABLE `commentaire` (
-  `ID` int(11) NOT NULL,
-  `IDUSER` int(11) DEFAULT NULL,
-  `IDCAGNOTTE` int(11) DEFAULT NULL,
-  `DATE` date DEFAULT NULL,
-  `COMMENTAIRE` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
--- Structure de la table `participation`
+-- Base de données : `cofonds`
 --
-
-CREATE TABLE `participation` (
-  `ID` int(11) NOT NULL,
-  `IDCAGNOTTE` int(11) DEFAULT NULL,
-  `IDUSER` int(11) DEFAULT NULL,
-  `DATE_TIMESTAMP` date DEFAULT NULL,
-  `PAIEMENT_TYPE` varchar(50) DEFAULT NULL,
-  `STATUT_PAIEMENT` varchar(15) NOT NULL,
-  `AMOUNT` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -57,39 +35,24 @@ CREATE TABLE `utilisateur` (
   `BIRTHDAY` date DEFAULT NULL,
   `EMAIL` varchar(255) NOT NULL,
   `PASSWORD` varchar(255) NOT NULL,
-  `TEL` int(11) DEFAULT NULL,
+  `TEL` varchar(11) DEFAULT NULL,
   `ADRESS` varchar(255) DEFAULT NULL,
   `CP` varchar(10) DEFAULT NULL,
   `VILLE` varchar(255) DEFAULT NULL,
-  `NUMADRESSE` int(11) DEFAULT NULL,
+  `NUMADRESSE` varchar(11) DEFAULT NULL,
   `GENRE` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Déchargement des données de la table `utilisateur`
+--
+
+INSERT INTO `utilisateur` (`ID`, `PSEUDO`, `NOM`, `PRENOM`, `BIRTHDAY`, `EMAIL`, `PASSWORD`, `TEL`, `ADRESS`, `CP`, `VILLE`, `NUMADRESSE`, `GENRE`) VALUES
+(1, 'alexmi', 'tex', 'alex', '2000-05-21', 'alex@gmail.com', '$2a$10$zXJn4ActSmu2A2ODNe.Ziubwe07G1aaSTuT/7nlZxUHItVkMTggca', '60585', 'passwordtest2', '75001', 'Paris', '2', 'H');
+
+--
 -- Index pour les tables déchargées
 --
-
---
--- Index pour la table `cagnotte`
---
-ALTER TABLE `cagnotte`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Index pour la table `commentaire`
---
-ALTER TABLE `commentaire`
-  ADD PRIMARY KEY (`ID`),
-  ADD KEY `IDUSER` (`IDUSER`),
-  ADD KEY `IDCAGNOTTE` (`IDCAGNOTTE`);
-
---
--- Index pour la table `participation`
---
-ALTER TABLE `participation`
-  ADD PRIMARY KEY (`ID`),
-  ADD KEY `IDCAGNOTTE` (`IDCAGNOTTE`),
-  ADD KEY `IDUSER` (`IDUSER`);
 
 --
 -- Index pour la table `utilisateur`
@@ -104,44 +67,12 @@ ALTER TABLE `utilisateur`
 --
 
 --
--- AUTO_INCREMENT pour la table `cagnotte`
---
-ALTER TABLE `cagnotte`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `commentaire`
---
-ALTER TABLE `commentaire`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `participation`
---
-ALTER TABLE `participation`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- Contraintes pour les tables déchargées
---
-
---
--- Contraintes pour la table `commentaire`
---
-ALTER TABLE `commentaire`
-  ADD CONSTRAINT `commentaire_ibfk_1` FOREIGN KEY (`IDUSER`) REFERENCES `utilisateur` (`ID`),
-  ADD CONSTRAINT `commentaire_ibfk_2` FOREIGN KEY (`IDCAGNOTTE`) REFERENCES `cagnotte` (`ID`);
-
---
--- Contraintes pour la table `participation`
---
-ALTER TABLE `participation`
-  ADD CONSTRAINT `participation_ibfk_1` FOREIGN KEY (`IDCAGNOTTE`) REFERENCES `cagnotte` (`ID`),
-  ADD CONSTRAINT `participation_ibfk_2` FOREIGN KEY (`IDUSER`) REFERENCES `utilisateur` (`ID`);
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

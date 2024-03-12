@@ -5,8 +5,6 @@
     const {verifytoken} = require('../services/token.service')
     const response = require('../services/response.service') //Load all responce request
 
-
-
     class AuthRouter{
         constructor( crud ){
                 this.router = express.Router();
@@ -57,7 +55,7 @@
                                 token : jwt.sign(
                                     {
                                         idUser: result_insert.insertId,
-                                        username: Pseudo,
+                                        email: Email,
                                         password: req.body.Password
                                     },
                                     process.env.SERVER_JWT_SECRET
@@ -65,10 +63,6 @@
                             })
                         
                     }
-
-                    
-
-
 
                 })
 
@@ -78,20 +72,24 @@
 
             this.router.post('/login', async ( req, res ) => {
             
-            if(!req.body.username || !req.body.password){
+                let Email, Password
+
+                Email = req.body.Email
+                Password = req.body.Password
+
+            if(!Email|| !Password){
                 return response.BadRequest(res)
             }
             
-            this.crud.send(`SELECT * FROM user WHERE user.Username  = ?`, [req.body.username], res, (results) =>{
+            this.crud.send(`SELECT * FROM utilisateur as user WHERE user.EMAIL  = ?`, [Email], res, (results) =>{
 
                 if(results.length == 0){
                     return response.Forbidden(res)
                 }
 
-
                 const validatedPassword = bcrypt.compareSync( 
-                    req.body.password, 
-                    results[0].Password,
+                    Password, 
+                    results[0].PASSWORD,
                 );
 
                 if(validatedPassword){
@@ -99,9 +97,9 @@
                     return response.Ok(res, {
                         token : jwt.sign(
                             {
-                                idUser: results[0].IdUser,
-                                username: results[0].Username,
-                                password: req.body.password
+                                idUser: results[0].ID,
+                                email: results[0].EMAIL,
+                                password: req.body.Password
                             },
                             process.env.SERVER_JWT_SECRET
                             ),

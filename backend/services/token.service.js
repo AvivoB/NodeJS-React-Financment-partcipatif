@@ -11,13 +11,13 @@ const verifytoken = (crud , token, res , callback) =>{
         return callback(false)
     }
 
-    crud.send(`SELECT * FROM utilisateur as User WHERE User.id = ?`, [decoded.idUser], res, (results) =>{
+    crud.send(`SELECT * FROM utilisateur as User WHERE User.id = ? and User.EMAIL = ?`, [decoded.idUser, decoded.email], res, (results) =>{
 
         if(results[0]){
-            
+
             const validatedPassword = bcrypt.compareSync( 
                 decoded.password, 
-                results[0].Password,
+                results[0].PASSWORD,
             );
 
             if(validatedPassword){
@@ -36,6 +36,7 @@ const verifytoken = (crud , token, res , callback) =>{
 
     
 }
+
 
 module.exports = {
     verifytoken
