@@ -8,7 +8,7 @@ const {crud} = require('./services/mysql.service')
 //const fileUpload = require('express-fileupload');
 
 
-//const AuthRouterClass = require('./routers/auth.router');
+const AuthRouterClass = require('./routes/auth.router');
 
 /* Server classe */
 
@@ -87,11 +87,11 @@ class ServerClass {
 
 
         // Init router classe
-        //const authRouter = new AuthRouterClass( this.crud );
+        const authRouter = new AuthRouterClass( this.crud );
         
 
         // Add router in server app
-        //this.app.use( '/api/auth', authRouter.init() );
+        this.app.use( '/api/auth', authRouter.init() );
         
 
         this.launch();
