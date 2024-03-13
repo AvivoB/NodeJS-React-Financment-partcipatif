@@ -17,32 +17,44 @@
             this.router.post('/add', async ( req, res ) => {
                 verifytoken(this.crud, req.token, res, (result) => {
                     if(result){
-                        let Nom, Description, Objectif, Etat, DateDebut, DateFin
+                        let Nom, Description, Etat, Objectif, DateDebut, DateFin
                         Nom = req.body.Nom
                         Description = req.body.Description
                         Objectif = req.body.Objectif
-                        Etat = req.body.Etat
+                        Etat = "ouvert"
                         DateDebut = req.body.DateDebut
                         DateFin = req.body.DateFin
         
-                    if(!Nom || !Description || !Objectif || !Etat || !DateDebut || !DateFin){
-                        return response.BadRequest(res)
-                    }
+                        if(!Nom || !Description || !Objectif || !DateDebut || !DateFin){
+                            return response.BadRequest(res)
+                        }
 
                         decoded = jwt.verify(req.token, process.env.SERVER_JWT_SECRET); 
-                        this.crud.send(`INSERT INTO cagnotte (NOM, DESCRIPTION, OBJECTIF, ETAT, DATEDEBUT, DATEFIN)`, [Adress, Cp, Ville, NumAdresse, decoded.idUser], res, (results) =>{
-                            return response.Ok(res, null)
+                        this.crud.send(`INSERT INTO cagnotte (IDUSER, NOM, DESCRIPTION, OBJECTIF, ETAT, DATEDEBUT, DATEFIN) VALUES (?,?,?,?,?,?, ?)`, [decoded.idUser, Nom, Description, Objectif, Etat, DateDebut, DateFin], res, (results) =>{
+                            return response.Ok(res, results)
                         })
                     }
                 })
             })
 
 
-            this.router.get('/:id', async ( req, res ) => {
+            this.router.get('/one/:id', async ( req, res ) => {
                 verifytoken(this.crud, req.token, res, (result) => {
                     if(result){
-                        decoded = jwt.verify(req.token, process.env.SERVER_JWT_SECRET); 
-                        this.crud.send(`SELECT * FROM utilisateur as user WHERE user.id = ?`, [decoded.idUser], res, (results) =>{
+                        const id = req.params.id
+                        
+                        this.crud.send(`SELECT * FROM cagnotte WHERE cagnotte.id = ?`, [id], res, (results) =>{
+                            return response.Ok(res, results)
+                        })
+                    }
+                })
+            })
+
+            this.router.get('/all', async ( req, res ) => {
+                verifytoken(this.crud, req.token, res, (result) => {
+                    if(result){
+                        
+                        this.crud.send(`SELECT * FROM cagnotte`, [], res, (results) =>{
                             return response.Ok(res, results)
                         })
                     }
