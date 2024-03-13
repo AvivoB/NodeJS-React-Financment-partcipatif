@@ -61,6 +61,25 @@
                 })
             })
 
+            this.router.post('/Cloture', async ( req, res ) => {
+                verifytoken(this.crud, req.token, res, (result) => {
+                    if(result){
+
+                        let Id = req.body.Id
+                        let Etat = "Cloturer"
+
+                        if(!Id){
+                            return response.BadRequest(res)
+                        }
+
+                        decoded = jwt.verify(req.token, process.env.SERVER_JWT_SECRET); 
+                        this.crud.send(`UPDATE cagnotte SET cagnotte.ETAT=? WHERE cagnotte.ID = ? AND cagnotte.IDUSER = ?`, [Etat, Id, decoded.idUser], res, (results) =>{
+                            return response.Ok(res, results)
+                        })
+                    }
+                })
+            })
+
 
 
         }
