@@ -43,7 +43,7 @@
                     if(result){
                         const id = req.params.id
                         
-                        this.crud.send(`SELECT * FROM cagnotte WHERE cagnotte.id = ?`, [id], res, (results) =>{
+                        this.crud.send(`SELECT utilisateur.PSEUDO,  cagnotte.* FROM cagnotte inner join utilisateur ON utilisateur.ID = cagnotte.IDUSER WHERE cagnotte.id = ?`, [id], res, (results) =>{
                             return response.Ok(res, results)
                         })
                     }
@@ -54,9 +54,38 @@
                 verifytoken(this.crud, req.token, res, (result) => {
                     if(result){
                         
-                        this.crud.send(`SELECT * FROM cagnotte`, [], res, (results) =>{
+                        this.crud.send(`SELECT utilisateur.PSEUDO,  cagnotte.* FROM cagnotte inner join utilisateur ON utilisateur.ID = cagnotte.IDUSER`, [], res, (results) =>{
                             return response.Ok(res, results)
                         })
+                    }
+                })
+            })
+
+            this.router.put('/image/:id', async ( req, res ) => {
+                verifytoken(this.crud, req.token, res, (result) => {
+                    if(result){
+                        const serviceId = req.params.id;
+                        
+                        const { image } = req.files;
+                        
+                        if (!image) return response.BadRequest(res);
+
+                        const nameSplit = image.name.split('.');
+                        const ext = nameSplit[nameSplit.length - 1]; 
+
+                        const currentDate = new Date();
+                        const formattedDate = currentDate.toISOString().replace(/:/g, '-').substring(0, 19);
+                        const filename = `${formattedDate}.${ext}`
+
+                        image.mv('./backend/pictures/' + filename);
+
+                        this.crud.send(`UPDATE cagnotte SET IMAGEURL = ? WHERE cagnotte.ID = ?`, [filename, serviceId], res, (results) =>{
+                            return response.Ok(res, {
+                               insertResult: results,
+                               image: filename
+                            })
+                        })
+
                     }
                 })
             })
