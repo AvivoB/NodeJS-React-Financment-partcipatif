@@ -43,7 +43,7 @@
                     if(result){
                         const id = req.params.id
                         
-                        this.crud.send(`SELECT utilisateur.PSEUDO,  cagnotte.* FROM cagnotte inner join utilisateur ON utilisateur.ID = cagnotte.IDUSER WHERE cagnotte.id = ?`, [id], res, (results) =>{
+                        this.crud.send(`SELECT utilisateur.PSEUDO, (SELECT SUM(p.AMOUNT) FROM participation as p WHERE p.IDCAGNOTTE = cagnotte.ID) AS AMOUNT ,cagnotte.* FROM cagnotte inner join utilisateur ON utilisateur.ID = cagnotte.IDUSER WHERE cagnotte.id = ?`, [id], res, (results) =>{
                             return response.Ok(res, results)
                         })
                     }
@@ -54,7 +54,7 @@
                 verifytoken(this.crud, req.token, res, (result) => {
                     if(result){
                         
-                        this.crud.send(`SELECT utilisateur.PSEUDO,  cagnotte.* FROM cagnotte inner join utilisateur ON utilisateur.ID = cagnotte.IDUSER`, [], res, (results) =>{
+                        this.crud.send(`SELECT utilisateur.PSEUDO, (SELECT SUM(p.AMOUNT) FROM participation as p WHERE p.IDCAGNOTTE = cagnotte.ID) AS AMOUNT, cagnotte.* FROM cagnotte inner join utilisateur ON utilisateur.ID = cagnotte.IDUSER`, [], res, (results) =>{
                             return response.Ok(res, results)
                         })
                     }

@@ -12,6 +12,7 @@ const AuthRouterClass = require('./routes/auth.router');
 const UtilisateurRouter = require('./routes/utilisateur.router')
 const CagnotteRouter = require('./routes/cagnotte.router')
 const CommentaireRouter = require('./routes/commentaire.router')
+const ParticipationRouter = require('./routes/participation.router')
 
 /* Server classe */
 
@@ -93,12 +94,14 @@ class ServerClass {
         const utilisateurRouter = new UtilisateurRouter( this.crud );
         const cagnotteRouter = new CagnotteRouter( this.crud );
         const commentaireRouter = new CommentaireRouter( this.crud );
+        const participationRouter = new ParticipationRouter( this.crud );
 
         // Add router in server app
         this.app.use( '/api/auth', authRouter.init() );
         this.app.use( '/api/utilisateur', utilisateurRouter.init() );
         this.app.use( '/api/cagnotte', cagnotteRouter.init() );
         this.app.use( '/api/commentaire', commentaireRouter.init() );
+        this.app.use( '/api/participation', participationRouter.init() );
         this.app.use('/image', express.static('./backend/pictures'))
         
         this.launch();
