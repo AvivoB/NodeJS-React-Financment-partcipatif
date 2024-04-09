@@ -5,10 +5,14 @@ const express = require('express'); // https://www.npmjs.com/package/express
 const mysql = require('mysql2'); // https://www.npmjs.com/package/mysql2
 const bearerToken = require('express-bearer-token'); // https://www.npmjs.com/package/express-bearer-token
 const {crud} = require('./services/mysql.service')
-//const fileUpload = require('express-fileupload');
+const fileUpload = require('express-fileupload'); // https://www.npmjs.com/package/express-fileupload
 
 
-//const AuthRouterClass = require('./routers/auth.router');
+const AuthRouterClass = require('./routes/auth.router');
+const UtilisateurRouter = require('./routes/utilisateur.router')
+const CagnotteRouter = require('./routes/cagnotte.router')
+const CommentaireRouter = require('./routes/commentaire.router')
+const ParticipationRouter = require('./routes/participation.router')
 
 /* Server classe */
 
@@ -18,7 +22,7 @@ class ServerClass {
         // Set server properties
         this.app = express();
         
-        //this.app.use(fileUpload()); upload fichier
+        this.app.use(fileUpload()); //upload fichier
         //this.app.use(cors())
         this.port = process.env.PORT;
 
@@ -85,15 +89,21 @@ class ServerClass {
     // Method to define serveur routes
     bindRoutes(){
 
-
         // Init router classe
-        //const authRouter = new AuthRouterClass( this.crud );
-        
+        const authRouter = new AuthRouterClass( this.crud );
+        const utilisateurRouter = new UtilisateurRouter( this.crud );
+        const cagnotteRouter = new CagnotteRouter( this.crud );
+        const commentaireRouter = new CommentaireRouter( this.crud );
+        const participationRouter = new ParticipationRouter( this.crud );
 
         // Add router in server app
-        //this.app.use( '/api/auth', authRouter.init() );
+        this.app.use( '/api/auth', authRouter.init() );
+        this.app.use( '/api/utilisateur', utilisateurRouter.init() );
+        this.app.use( '/api/cagnotte', cagnotteRouter.init() );
+        this.app.use( '/api/commentaire', commentaireRouter.init() );
+        this.app.use( '/api/participation', participationRouter.init() );
+        this.app.use('/image', express.static('./backend/pictures'))
         
-
         this.launch();
     };
 
