@@ -39,25 +39,32 @@
 
 
             this.router.get('/one/:id', async ( req, res ) => {
-                verifytoken(this.crud, req.token, res, (result) => {
-                    if(result){
-                        const id = req.params.id
-                        
-                        this.crud.send(`SELECT utilisateur.PSEUDO, (SELECT SUM(p.AMOUNT) FROM participation as p WHERE p.IDCAGNOTTE = cagnotte.ID) AS AMOUNT ,cagnotte.* FROM cagnotte inner join utilisateur ON utilisateur.ID = cagnotte.IDUSER WHERE cagnotte.id = ?`, [id], res, (results) =>{
-                            return response.Ok(res, results)
-                        })
-                    }
+                const id = req.params.id
+                
+                this.crud.send(`SELECT utilisateur.PSEUDO, (SELECT SUM(p.AMOUNT) FROM participation as p WHERE p.IDCAGNOTTE = cagnotte.ID) AS AMOUNT ,cagnotte.* FROM cagnotte inner join utilisateur ON utilisateur.ID = cagnotte.IDUSER WHERE cagnotte.id = ?`, [id], res, (results) =>{
+                    return response.Ok(res, results)
                 })
             })
 
-            this.router.get('/all', async ( req, res ) => {
-                verifytoken(this.crud, req.token, res, (result) => {
-                    if(result){
+            // this.router.get('/all', async ( req, res ) => {
                         
-                        this.crud.send(`SELECT utilisateur.PSEUDO, (SELECT SUM(p.AMOUNT) FROM participation as p WHERE p.IDCAGNOTTE = cagnotte.ID) AS AMOUNT, cagnotte.* FROM cagnotte inner join utilisateur ON utilisateur.ID = cagnotte.IDUSER`, [], res, (results) =>{
-                            return response.Ok(res, results)
-                        })
-                    }
+            //     this.crud.send(`SELECT utilisateur.PSEUDO, (SELECT SUM(p.AMOUNT) FROM participation as p WHERE p.IDCAGNOTTE = cagnotte.ID) AS AMOUNT, cagnotte.* FROM cagnotte inner join utilisateur ON utilisateur.ID = cagnotte.IDUSER`, [], res, (results) =>{
+            //         return response.Ok(res, results)
+            //     })
+
+            // })
+
+            this.router.get('/all', async ( req, res ) => {
+                this.crud.send(`
+                    SELECT 
+                        utilisateur.PSEUDO, 
+                        (SELECT SUM(p.AMOUNT) FROM participation as p WHERE p.IDCAGNOTTE = cagnotte.ID) AS AMOUNT, 
+                        (SELECT COUNT(*) FROM participation as p WHERE p.IDCAGNOTTE = cagnotte.ID) AS PARTICIPATION_COUNT,
+                        cagnotte.* 
+                    FROM cagnotte 
+                    INNER JOIN utilisateur ON utilisateur.ID = cagnotte.IDUSER
+                `, [], res, (results) =>{
+                    return response.Ok(res, results)
                 })
             })
 
